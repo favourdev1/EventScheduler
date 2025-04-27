@@ -118,6 +118,8 @@ MAIL_FROM_ADDRESS="noreply@yourdomain.com"
 MAIL_FROM_NAME="${APP_NAME}"
 ```
 
+---
+
 ## API Endpoints
 
 ### Authentication
@@ -128,6 +130,8 @@ MAIL_FROM_NAME="${APP_NAME}"
 | POST | `/api/login` | Login user | Public |
 | POST | `/api/logout` | Logout user | Authenticated |
 | GET | `/api/me` | Get current user profile | Authenticated |
+
+---
 
 ### Events
 
@@ -141,6 +145,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 | POST | `/api/events/{id}/register` | Register for event | Authenticated |
 | POST | `/api/events/{id}/cancel-registration` | Cancel registration | Registered User |
 | GET | `/api/events/{id}/participants` | View participants | Admin/Event Organizer |
+---
 
 ### Categories
 
@@ -152,123 +157,7 @@ MAIL_FROM_NAME="${APP_NAME}"
 | PUT | `/api/categories/{id}` | Update category | Admin |
 | DELETE | `/api/categories/{id}` | Delete category | Admin |
 
-### Admin Routes
-
-| Method | Endpoint | Description | Access |
-|--------|----------|-------------|---------|
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+---
 
 
 ## Admin Routes
