@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Responses\ApiResponse;
 use App\Models\EventCategory;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class EventCategoryController extends Controller
     public function __construct()
     {
         $this->middleware('auth:sanctum');
-        $this->middleware('admin')->except(['index', 'show']);
+        $this->middleware(AdminMiddleware::class)->except(['index', 'show']);
     }
 
     public function index()

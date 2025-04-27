@@ -26,6 +26,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/events/{event}/cancel-registration', [EventController::class, 'cancelRegistration']);
     Route::get('/events/{event}/participants', [EventController::class, 'participants']);
 
+
     // Admin-only routes (with both auth and admin middleware)
     Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () {
         Route::controller(AdminController::class)->group(function () {
