@@ -17,15 +17,22 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
 
-    // Event categories
-    Route::apiResource('categories', EventCategoryController::class);
+    // Public category routes (accessible by all authenticated users)
+    Route::get('/categories', [EventCategoryController::class, 'index']);
+    Route::get('/categories/{category}', [EventCategoryController::class, 'show']);
+
+    // Admin-only category routes
+    Route::middleware([AdminMiddleware::class])->group(function () {
+        Route::post('/categories', [EventCategoryController::class, 'store']);
+        Route::put('/categories/{category}', [EventCategoryController::class, 'update']);
+        Route::delete('/categories/{category}', [EventCategoryController::class, 'destroy']);
+    });
 
     // Events
     Route::apiResource('events', EventController::class);
     Route::post('/events/{event}/register', [EventController::class, 'register']);
     Route::post('/events/{event}/cancel-registration', [EventController::class, 'cancelRegistration']);
     Route::get('/events/{event}/participants', [EventController::class, 'participants']);
-
 
     // Admin-only routes (with both auth and admin middleware)
     Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () {

@@ -8,22 +8,22 @@ use App\Http\Responses\ApiResponse;
 use App\Models\EventCategory;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
+use Log;
 
 class EventCategoryController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth:sanctum');
-        $this->middleware(AdminMiddleware::class)->except(['index', 'show']);
-    }
-
     public function index()
     {
         try {
             $categories = EventCategory::withCount('events')->get();
             return ApiResponse::success($categories, 'Categories retrieved successfully');
+        } catch (\Illuminate\Database\QueryException $e) {
+            Log::error('Error retrieving event categories: ' . $e->getMessage());
+
+            return ApiResponse::error(null, 'Database error while retrieving categories', 500);
         } catch (\Exception $e) {
-            return ApiResponse::error(null, 'Failed to retrieve categories');
+            Log::error('Error retrieving event categories: ' . $e->getMessage());
+            return ApiResponse::error($e->getMessage(), 'Failed to retrieve categories', 500);
         }
     }
 
