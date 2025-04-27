@@ -13,12 +13,12 @@ class ApiResponse
         ], $statusCode);
     }
 
-    public static function error($error = null, string $message = 'Operation failed', int $statusCode = 400)
+    public static function error($errors = null, string $message = 'Operation failed', int $statusCode = 400)
     {
         return response()->json([
             'status' => false,
             'message' => $message,
-            'errors' => $error,
+            'errors' => $errors,
         ], $statusCode);
     }
 
@@ -40,5 +40,10 @@ class ApiResponse
     public static function unauthorized(string $message = 'Unauthorized access')
     {
         return self::error(null, $message, 403);
+    }
+
+    public static function unauthenticated(string $message = 'Unauthenticated.')
+    {
+        return self::error(null, $message, 401);
     }
 }
