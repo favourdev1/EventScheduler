@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler
                 }
 
                 if ($e instanceof AuthenticationException) {
-                    return ApiResponse::error(null, 'Unauthenticatedww', 401);
+                    return ApiResponse::error(null, 'Unauthenticated', 401);
                 }
 
                 if ($e instanceof NotFoundHttpException) {
