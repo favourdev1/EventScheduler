@@ -10,6 +10,11 @@ beforeEach(function () {
 });
 
 test('user can register with valid data', function () {
+    // Create an admin user first
+    User::factory()->create([
+        'role' => 'admin'
+    ]);
+
     $response = $this->postJson('/api/register', [
         'name' => 'Test User',
         'email' => 'test@example.com',
@@ -33,7 +38,8 @@ test('user can register with valid data', function () {
             ]
         ]);
 
-        Mail::assertQueued(NewUserRegisteredAdminNotification::class);
+    Mail::assertQueued(WelcomeEmail::class);
+    Mail::assertQueued(NewUserRegisteredAdminNotification::class);
 });
 
 test('registration fails with missing fields', function () {
