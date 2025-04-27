@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
 
         // Create some sample events
         $now = Carbon::now();
-        
+
         // Upcoming events
         for ($i = 1; $i <= 3; $i++) {
             Event::create([

@@ -116,7 +116,18 @@ class EventController extends Controller
             $event = Event::lockForUpdate()->findOrFail($event->id);
 
             if (!$event->hasAvailableSpots()) {
-                return ApiResponse::error(null, 'Event is full');
+                DB::rollBack();
+                return ApiResponse::validationError(['event' => ['This event has reached its maximum participant limit.']]);
+            }
+
+            if ($request->user()->hasOverlappingEvents($event->start_time, $event->end_time, $event->id)) {
+                DB::rollBack();
+                return ApiResponse::validationError(['event' => ['You have another event scheduled during this time period.']]);
+            }
+
+            if ($event->registrations()->where('user_id', $request->user()->id)->where('status', 'registered')->exists()) {
+                DB::rollBack();
+                return ApiResponse::validationError(['event' => ['You are already registered for this event.']]);
             }
 
             $registration = $event->registrations()->create([
@@ -161,6 +172,8 @@ class EventController extends Controller
             ]);
 
             return ApiResponse::success(null, 'Registration cancelled successfully');
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return ApiResponse::notFound('Registration not found');
         } catch (\Exception $e) {
             return ApiResponse::error(null, 'Failed to cancel registration');
         }

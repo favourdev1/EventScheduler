@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\EventController;
 use App\Http\Controllers\API\EventCategoryController;
 use App\Http\Controllers\API\AdminController;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Public authentication routes
@@ -11,7 +12,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
 // Protected routes
-Route::middleware('auth:sanctum')->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
     // Auth routes
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
@@ -25,10 +26,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/events/{event}/cancel-registration', [EventController::class, 'cancelRegistration']);
     Route::get('/events/{event}/participants', [EventController::class, 'participants']);
 
-    // Admin-only routes
-    Route::middleware('admin')->prefix('admin')->group(function () {
-        // User Management
+    // Admin-only routes (with both auth and admin middleware)
+    Route::middleware([AdminMiddleware::class])->prefix('admin')->group(function () {
         Route::controller(AdminController::class)->group(function () {
+            // User Management
             Route::get('/users', 'users');
             Route::post('/users', 'createUser');
             Route::put('/users/{user}', 'updateUser');
@@ -43,5 +44,4 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/statistics', 'statistics');
         });
     });
-
 });

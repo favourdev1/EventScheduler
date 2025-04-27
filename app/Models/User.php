@@ -61,16 +61,14 @@ class User extends Authenticatable
     public function hasOverlappingEvents($startTime, $endTime, $excludeEventId = null): bool
     {
         return $this->registeredEvents()
-            ->where('status', '!=', 'cancelled')
+            ->where('event_registrations.status', '!=', 'cancelled')
             ->where(function ($query) use ($startTime, $endTime, $excludeEventId) {
                 $query->where(function ($q) use ($startTime, $endTime) {
-                    $q->whereBetween('start_time', [$startTime, $endTime])
-                      ->orWhereBetween('end_time', [$startTime, $endTime])
-                      ->orWhere(function ($q) use ($startTime, $endTime) {
-                          $q->where('start_time', '<=', $startTime)
-                            ->where('end_time', '>=', $endTime);
-                      });
+                    // Event starts during another event
+                    $q->where('events.start_time', '<', $endTime)
+                      ->where('events.end_time', '>', $startTime);
                 });
+
                 if ($excludeEventId) {
                     $query->where('events.id', '!=', $excludeEventId);
                 }
